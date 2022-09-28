@@ -21,7 +21,7 @@ public class Breakfast
     public List<string> Savory { get; }
     public List<string> Sweet { get; }
 
-    private Breakfast(
+    public Breakfast(
         Guid id,
         string name,
         string description,
