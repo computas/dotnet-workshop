@@ -1,4 +1,4 @@
-using BuberBreakfast.Contracts.Breakfast;
+using BuberBreakfast.Dtos.Breakfast.Breakfast;
 using BuberBreakfast.ServiceErrors;
 using ErrorOr;
 
@@ -41,7 +41,7 @@ public class Breakfast
         Sweet = sweet;
     }
 
-    public static ErrorOr<Breakfast> Create(
+    private static ErrorOr<Breakfast> Create(
         string name,
         string description,
         DateTime startDateTime,
@@ -78,26 +78,26 @@ public class Breakfast
             sweet);
     }
 
-    public static ErrorOr<Breakfast> From(CreateBreakfastRequest request)
+    public static ErrorOr<Breakfast> From(CreateBreakfastRequestDto requestDto)
     {
         return Create(
-            request.Name,
-            request.Description,
-            request.StartDateTime,
-            request.EndDateTime,
-            request.Savory,
-            request.Sweet);
+            requestDto.Name,
+            requestDto.Description,
+            requestDto.StartDateTime,
+            requestDto.EndDateTime,
+            requestDto.Savory,
+            requestDto.Sweet);
     }
 
-    public static ErrorOr<Breakfast> From(Guid id, UpsertBreakfastRequest request)
+    public static ErrorOr<Breakfast> From(Guid id, UpsertBreakfastRequestDto requestDto)
     {
         return Create(
-            request.Name,
-            request.Description,
-            request.StartDateTime,
-            request.EndDateTime,
-            request.Savory,
-            request.Sweet,
+            requestDto.Name,
+            requestDto.Description,
+            requestDto.StartDateTime,
+            requestDto.EndDateTime,
+            requestDto.Savory,
+            requestDto.Sweet,
             id);
     }
 }

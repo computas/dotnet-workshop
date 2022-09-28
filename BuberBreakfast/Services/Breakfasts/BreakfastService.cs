@@ -6,7 +6,7 @@ namespace BuberBreakfast.Services.Breakfasts;
 
 public class BreakfastService : IBreakfastService
 {
-    private static readonly Dictionary<Guid, Breakfast> _breakfasts = new();
+    private readonly Dictionary<Guid, Breakfast> _breakfasts = new();
 
     public ErrorOr<Created> CreateBreakfast(Breakfast breakfast)
     {

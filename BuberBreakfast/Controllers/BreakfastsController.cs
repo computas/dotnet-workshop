@@ -1,6 +1,5 @@
-using BuberBreakfast.Contracts.Breakfast;
+using BuberBreakfast.Dtos.Breakfast.Breakfast;
 using BuberBreakfast.Models;
-using BuberBreakfast.ServiceErrors;
 using BuberBreakfast.Services.Breakfasts;
 using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +16,9 @@ public class BreakfastsController : ApiController
     }
 
     [HttpPost]
-    public IActionResult CreateBreakfast(CreateBreakfastRequest request)
+    public IActionResult CreateBreakfast(CreateBreakfastRequestDto requestDto)
     {
-        ErrorOr<Breakfast> requestToBreakfastResult = Breakfast.From(request);
+        ErrorOr<Breakfast> requestToBreakfastResult = Breakfast.From(requestDto);
 
         if (requestToBreakfastResult.IsError)
         {
@@ -45,9 +44,9 @@ public class BreakfastsController : ApiController
     }
 
     [HttpPut("{id:guid}")]
-    public IActionResult UpsertBreakfast(Guid id, UpsertBreakfastRequest request)
+    public IActionResult UpsertBreakfast(Guid id, UpsertBreakfastRequestDto requestDto)
     {
-        ErrorOr<Breakfast> requestToBreakfastResult = Breakfast.From(id, request);
+        ErrorOr<Breakfast> requestToBreakfastResult = Breakfast.From(id, requestDto);
 
         if (requestToBreakfastResult.IsError)
         {
@@ -72,9 +71,9 @@ public class BreakfastsController : ApiController
             errors => Problem(errors));
     }
 
-    private static BreakfastResponse MapBreakfastResponse(Breakfast breakfast)
+    private static BreakfastResponseDto MapBreakfastResponse(Breakfast breakfast)
     {
-        return new BreakfastResponse(
+        return new BreakfastResponseDto(
             breakfast.Id,
             breakfast.Name,
             breakfast.Description,
