@@ -1,6 +1,6 @@
 using BuberBreakfast.Dtos.Breakfast.Breakfast;
 using BuberBreakfast.Models;
-using BuberBreakfast.Services.Breakfasts;
+using BuberBreakfast.Services;
 using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,11 +29,12 @@ public class BreakfastsController : ApiController
         ErrorOr<Created> createBreakfastResult = _breakfastService.CreateBreakfast(breakfast);
 
         return createBreakfastResult.Match(
-            created => CreatedAtGetBreakfast(breakfast),
+            _ => CreatedAtGetBreakfast(breakfast),
             errors => Problem(errors));
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(BreakfastResponseDto), StatusCodes.Status200OK)]
     public IActionResult GetBreakfast(Guid id)
     {
         ErrorOr<Breakfast> getBreakfastResult = _breakfastService.GetBreakfast(id);
@@ -43,8 +44,19 @@ public class BreakfastsController : ApiController
             errors => Problem(errors));
     }
 
+    [HttpGet("Upcoming")]
+    [ProducesResponseType(typeof(List<BreakfastResponseDto>), StatusCodes.Status200OK)]
+    public IActionResult GetUpcommingBreakfasts()
+    {
+        var getBreakfastResult = _breakfastService.GetUpcomingBreakfasts();
+
+        return getBreakfastResult.Match(
+            breakfasts => Ok(breakfasts.ConvertAll(MapBreakfastResponse)),
+            errors => Problem(errors));
+    }
+
     [HttpPut("{id:guid}")]
-    public IActionResult UpsertBreakfast(Guid id, UpsertBreakfastRequestDto requestDto)
+    public IActionResult UpsertBreakfast(Guid id, [FromBody] UpsertBreakfastRequestDto requestDto)
     {
         ErrorOr<Breakfast> requestToBreakfastResult = Breakfast.From(id, requestDto);
 
@@ -54,10 +66,10 @@ public class BreakfastsController : ApiController
         }
 
         var breakfast = requestToBreakfastResult.Value;
-        ErrorOr<UpsertedBreakfast> upsertBreakfastResult = _breakfastService.UpsertBreakfast(breakfast);
+        ErrorOr<bool> upsertBreakfastResult = _breakfastService.UpsertBreakfast(breakfast);
 
         return upsertBreakfastResult.Match(
-            upserted => upserted.IsNewlyCreated ? CreatedAtGetBreakfast(breakfast) : NoContent(),
+            upserted => upserted ? CreatedAtGetBreakfast(breakfast) : NoContent(),
             errors => Problem(errors));
     }
 

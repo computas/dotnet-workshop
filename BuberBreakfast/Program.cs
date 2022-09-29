@@ -1,4 +1,4 @@
-using BuberBreakfast.Services.Breakfasts;
+using BuberBreakfast.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -7,7 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    builder.Services.AddScoped<IBreakfastService, BreakfastService>();
+    // Dependency injection
+    builder.Services.AddSingleton<IBreakfastService, BreakfastService>(); // Hva skjer hvis denne er transient?
+    // TODO Legg til BreakfastRepository. Hvilke scope kan man bruke?
 }
 
 
