@@ -1,3 +1,5 @@
+using BuberBreakfast.Models;
+using BuberBreakfast.Repositories;
 using BuberBreakfast.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddSwaggerGen();
 
     // Dependency injection
-    builder.Services.AddSingleton<IBreakfastService, BreakfastService>(); // Hva skjer hvis denne er transient?
+    builder.Services.AddTransient<IBreakfastService, BreakfastService>(); // Hva skjer hvis denne er transient?
+    builder.Services.AddSingleton<IBreakfastRepository>(_ =>
+        new BreakfastRepository(new Dictionary<Guid, Breakfast>())
+    );
     // TODO Legg til BreakfastRepository. Hvilke scope kan man bruke?
 }
 

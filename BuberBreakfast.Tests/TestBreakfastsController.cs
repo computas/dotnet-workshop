@@ -39,6 +39,7 @@ public class TestBreakFastsController
             Times.Once);
 
         // TODO Workshop #4-> test at statuscode er slik som forventet
+        Assert.Equal(StatusCodes.Status200OK, result?.StatusCode);
     }
 
     [Fact]

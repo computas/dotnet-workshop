@@ -1,4 +1,5 @@
 using BuberBreakfast.Models;
+using BuberBreakfast.Repositories;
 using BuberBreakfast.ServiceErrors;
 using ErrorOr;
 
@@ -6,47 +7,51 @@ namespace BuberBreakfast.Services;
 
 public class BreakfastService : IBreakfastService
 {
-    private readonly Dictionary<Guid, Breakfast> _breakfasts = new();
+    private readonly IBreakfastRepository _breakfastRepository;
 
     // TODO -> Inject BreakfastRepository i konstruktøren
-    public BreakfastService()
+    public BreakfastService(IBreakfastRepository breakfastRepository)
     {
-
+        _breakfastRepository = breakfastRepository;
     }
 
     public ErrorOr<Created> CreateBreakfast(Breakfast breakfast)
     {
-        _breakfasts.Add(breakfast.Id, breakfast);
+        _breakfastRepository.Add(breakfast);
 
         return Result.Created;
     }
 
     public ErrorOr<Deleted> DeleteBreakfast(Guid id)
     {
-        _breakfasts.Remove(id);
-
-        return Result.Deleted;
+        if (_breakfastRepository.Delete(id))
+        {
+            return Result.Deleted;
+        }
+        return Error.NotFound();
     }
 
     public ErrorOr<Breakfast> GetBreakfast(Guid id)
     {
-        if (_breakfasts.TryGetValue(id, out var breakfast))
+        var breakfast = _breakfastRepository.Get(id);
+        if (breakfast != null)
         {
             return breakfast;
         }
-
         return Errors.Breakfast.NotFound;
     }
+
     // TODO Workshop #2-> Create a method that retrieves all the upcoming breakfasts. Order by StartDateTime
     public ErrorOr<List<Breakfast>> GetUpcomingBreakfasts()
     {
-        throw new NotImplementedException();
+        var breakfasts = _breakfastRepository.GetAll();
+        return breakfasts.Where(breakfast => breakfast.StartDateTime > DateTime.Today)
+            .OrderBy(breakfast => breakfast.StartDateTime)
+            .ToList();
     }
 
     public ErrorOr<bool> UpsertBreakfast(Breakfast breakfast)
     {
-        var isNewlyCreated = !_breakfasts.ContainsKey(breakfast.Id);
-        _breakfasts[breakfast.Id] = breakfast;
-        return isNewlyCreated;
+        return _breakfastRepository.Upsert(breakfast);
     }
 }
