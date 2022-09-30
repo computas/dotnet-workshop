@@ -8,7 +8,7 @@ public class BreakfastService : IBreakfastService
 {
     private readonly Dictionary<Guid, Breakfast> _breakfasts = new();
 
-    // TODO -> Inject BreakfastRepository i konstruktøren
+    // TODO Oppgave #2 -> Inject BreakfastRepository i konstruktøren
     public BreakfastService()
     {
 
@@ -37,7 +37,7 @@ public class BreakfastService : IBreakfastService
 
         return Errors.Breakfast.NotFound;
     }
-    // TODO Workshop #2-> Create a method that retrieves all the upcoming breakfasts. Order by StartDateTime
+    // TODO Oppgave #1-> Create a method that retrieves all the upcoming breakfasts. Order by StartDateTime
     public ErrorOr<List<Breakfast>> GetUpcomingBreakfasts()
     {
         throw new NotImplementedException();

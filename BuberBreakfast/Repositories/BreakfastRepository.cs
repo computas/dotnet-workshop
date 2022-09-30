@@ -1,5 +1,5 @@
 using BuberBreakfast.Models;
-// Workshop #3
+// Oppgave #2
 namespace BuberBreakfast.Repositories;
 // TODO Lag og implementer et interface for BreakfastRepository
 public class BreakfastRepository
